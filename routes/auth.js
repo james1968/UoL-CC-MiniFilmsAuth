@@ -5,6 +5,7 @@ const User = require('../models/user')
 const {registerValidation, loginValidation} = require('../validations/validation')
 
 const bcryptjs = require('bcryptjs')
+const jsonwebtoken = require('jsonwebtoken')
 
 router.post('/register', async(req, res)=> {
 
@@ -60,7 +61,10 @@ router.post('/login', async(req, res)=> {
         return res.status(400).send({message:"Incorrect password"})
     }
 
-    res.send('Success.')
+    // Create token
+
+    const token = jsonwebtoken.sign({_id:user._id}, process.env.TOKEN_SECRET)
+    res.header('auth-token',token).send({'auth-token':token})
 
 
 })
